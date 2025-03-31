@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpaceVoyager - Explore the Cosmos</title>
+    <style>
+        :root {
+            --primary-dark: #0a192f;
+            --primary: #172a45;
+            --primary-light: #303f60;
+            --accent: #64ffda;
+            --text: #e6f1ff;
+            --text-secondary: #8892b0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background-color: var(--primary-dark);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 0;
+        }
+        
+        header {
+            padding: 1rem 0;
+            background-color: var(--primary);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            color: var(--accent);
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .logo i {
+            margin-right: 0.5rem;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 1.5rem;
+        }
+        
+        .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            transition: color 0.3s;
+            padding: 0.5rem;
+        }
+        
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+        
+        .hero {
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(rgba(10, 25, 47, 0.7), rgba(10, 25, 47, 0.9)), url('/api/placeholder/1200/800') center/cover no-repeat;
+            margin-bottom: 3rem;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            animation: fadeIn 1s ease-in;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin-bottom: 2rem;
+            color: var(--text-secondary);
+            animation: fadeIn 1.5s ease-in;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: transparent;
+            color: var(--accent);
+            border: 1px solid var(--accent);
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .btn:hover {
+            background-color: rgba(100, 255, 218, 0.1);
+            transform: translateY(-3px);
+        }
+        
+        section {
+            margin-bottom: 4rem;
+        }
+        
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: var(--text);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--accent);
+        }
+        
+        .missions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .mission-card {
+            background-color: var(--primary);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .mission-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .mission-img {
+            height: 200px;
+            width: 100%;
+            object-fit: cover;
+        }
+        
+        .mission-info {
+            padding: 1.5rem;
+        }
+        
+        .mission-info h3 {
+            margin-bottom: 0.5rem;
+            color: var(--accent);
+        }
+        
+        .mission-info p {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+        
+        .mission-meta {
+            display: flex;
+            justify-content: space-between;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        .facts-container {
+            background-color: var(--primary);
+            border-radius: 8px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .fact-item {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        .fact-item.active {
+            display: block;
+        }
+        
+        .fact-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+        }
+        
+        .fact-btn {
+            background-color: transparent;
+            border: none;
+            color: var(--accent);
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+        
+        .fact-btn:disabled {
+            color: var(--text-secondary);
+            cursor: not-allowed;
+        }
+        
+        .people-slider {
+            position: relative;
+            height: 400px;
+            overflow: hidden;
+        }
+        
+        .person-card {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        .person-card.active {
+            display: flex;
+        }
+        
+        .person-img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--accent);
+            margin-bottom: 1rem;
+        }
+        
+        .person-info h3 {
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+        
+        .person-info p {
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 1rem;
+        }
+        
+        .slider-nav {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+        
+        .slider-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: var(--text-secondary);
+            margin: 0 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .slider-dot.active {
+            background-color: var(--accent);
+        }
+        
+        .search-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 3rem;
+        }
+        
+        .search-bar {
+            width: 100%;
+            max-width: 600px;
+            display: flex;
+            margin-bottom: 2rem;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 1rem;
+            border: 2px solid var(--primary-light);
+            background-color: var(--primary);
+            color: var(--text);
+            border-radius: 4px 0 0 4px;
+            font-size: 1rem;
+        }
+        
+        .search-btn {
+            background-color: var(--accent);
+            color: var(--primary-dark);
+            border: none;
+            padding: 0 1.5rem;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        footer {
+            background-color: var(--primary);
+            padding: 2rem 0;
+            text-align: center;
+            margin-top: 4rem;
+        }
+        
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .social-links {
+            display: flex;
+            list-style: none;
+            margin-bottom: 1.5rem;
+        }
+        
+        .social-links li {
+            margin: 0 1rem;
+        }
+        
+        .social-links a {
+            color: var(--text);
+            font-size: 1.5rem;
+            transition: color 0.3s;
+        }
+        
+        .social-links a:hover {
+            color: var(--accent);
+        }
+        
+        .copyright {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        .styled-button {
+    display: inline-block;
+    padding: 12px 24px;
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    background: linear-gradient(45deg, #ff8c00, #ff0080);
+    border-radius: 8px;
+    text-decoration: none;
+    box-shadow: 0 0 10px rgba(255, 140, 0, 0.8);
+    transition: transform 0.2s, box-shadow 0.3s;
+}
+
+.styled-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px rgba(255, 140, 0, 1);
+}
+
+        body { font-family: Arial, sans-serif; background-color: #0b3d91; color: white; margin: 0; padding: 0; }
+
+header { background-color: #062d75; padding: 20px; text-align: center; }
+
+h1 { margin: 0; font-size: 2.5em; color: #ffcc00; }
+
+nav ul { list-style: none; padding: 0; text-align: center; }
+
+nav ul li { display: inline; margin: 0 15px; }
+
+nav ul li a { color: white; text-decoration: none; font-size: 1.2em; }
+
+nav ul li a.active { font-weight: bold; border-bottom: 2px solid #ffcc00; }
+
+main { padding: 20px; max-width: 900px; margin: auto; }
+
+section { margin-bottom: 30px; padding: 20px; background-color: #08306b; border-radius: 10px; box-shadow: 0 0 10px rgba(255, 255, 255, 0.2); }
+
+h2 { color: #ffcc00; border-bottom: 2px solid #ffcc00; padding-bottom: 10px; }
+
+article { background-color: #0c4da2; padding: 15px; border-radius: 8px; margin-top: 10px; }
+
+ul { padding-left: 20px; }
+
+li { margin-bottom: 10px; }
+
+footer { text-align: center; padding: 15px; background-color: #062d75; position: relative; bottom: 0; width: 100%; }
+        
+        /* Search Results Styling */
+        .search-results {
+            display: none;
+            padding: 2rem;
+            background-color: var(--primary);
+            border-radius: 8px;
+            margin-bottom: 3rem;
+        }
+        
+        .search-results.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        .result-item {
+            padding: 1rem;
+            border-bottom: 1px solid var(--primary-light);
+            transition: background-color 0.3s;
+        }
+        
+        .result-item:last-child {
+            border-bottom: none;
+        }
+        
+        .result-item:hover {
+            background-color: var(--primary-light);
+        }
+        
+        .result-title {
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+        
+        .result-category {
+            display: inline-block;
+            padding: 0.2rem 0.5rem;
+            background-color: var(--primary-light);
+            color: var(--text-secondary);
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .result-snippet {
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .result-link {
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        
+        .result-link:hover {
+            text-decoration: underline;
+        }
+        
+        .page-hidden {
+            display: none;
+        }
+        
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .missions-grid {
+                grid-template-columns: 1fr;
+            }
+            .timeline::after {
+                left: 31px;
+            }
+            
+            .timeline-item {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+                left: 0;
+            }
+            
+            .timeline-item::after {
+                left: 21px;
+            }
+            
+            .timeline-left::after,
+            .timeline-right::after {
+                left: 21px;
+            }
+            
+            .timeline-right {
+                left: 0;
+        }
+     
+}
+</style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">
+                    <span>SpaceVoyager</span>
+                </div>
+                <ul class="nav-links">
+                    <li><a href="#missions">Missions</a></li>
+                    <li><a href="#facts">Space Facts</a></li>
+                    <li><a href="#people">Space Pioneers</a></li>
+                    <li><a href="#search">Search</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+     <!-- Home Page -->
+     <div id="home-page">
+
+    <section class="hero">
+        <h1>Explore the Wonders of Space</h1>
+        <p>Discover global space missions, fascinating facts, and the pioneers who made it all possible.</p>
+        <a href="#missions" class="btn">Begin Journey</a><a href="indian.html" class="styled-button">INDIAN SPACE ACHIEVEMENTS</a>
+    </section>
+
+    <div class="container">
+        <section id="missions">
+            <h2 class="section-title">Space Missions</h2>
+            <div class="missions-grid">
+                <!-- Apollo 11 -->
+                <div class="mission-card">
+                    <img src="C:\Users\ANUPAMA\OneDrive\Desktop\space\apollo11.jpg" alt="Apollo 11 Mission" class="mission-img">
+                    <div class="mission-info">
+                        <h3>Apollo 11</h3>
+                        <p>First manned mission to land on the Moon, with astronauts Neil Armstrong and Buzz Aldrin.</p>
+                        <div class="mission-meta">
+                            <span>NASA</span>
+                            <span>July 20, 1969</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Mars Perseverance -->
+                <div class="mission-card">
+                    <img src="C:\Users\ANUPAMA\OneDrive\Desktop\space\mars.jpg" alt="Mars Perseverance" class="mission-img">
+                    <div class="mission-info">
+                        <h3>Mars Perseverance</h3>
+                        <p>NASA rover searching for signs of ancient microbial life on Mars and collecting samples.</p>
+                        <div class="mission-meta">
+                            <span>NASA</span>
+                            <span>February 18, 2021</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Chandrayaan-3 -->
+                <div class="mission-card">
+                    <img src="C:\Users\ANUPAMA\OneDrive\Desktop\space\Chandrayaan3.jpg" alt="Chandrayaan-3" class="mission-img">
+                    <div class="mission-info">
+                        <h3>Chandrayaan-3</h3>
+                        <p>Indian mission that successfully landed near the lunar south pole, making India the fourth country to achieve a soft landing on the Moon.</p>
+                        <div class="mission-meta">
+                            <span>ISRO</span>
+                            <span>August 23, 2023</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Voyager 1 -->
+                <div class="mission-card">
+                    <img src="C:\Users\ANUPAMA\OneDrive\Desktop\space\voyeger.jpg" alt="Voyager 1" class="mission-img">
+                    <div class="mission-info">
+                        <h3>Voyager 1</h3>
+                        <p>The farthest human-made object from Earth, now in interstellar space providing data about the outer reaches of our solar system.</p>
+                        <div class="mission-meta">
+                            <span>NASA</span>
+                            <span>September 5, 1977</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tiangong Space Station -->
+                <div class="mission-card">
+                    <img src="C:\Users\ANUPAMA\OneDrive\Desktop\space\Tiangong Space Station.avif" alt="Tiangong Space Station" class="mission-img">
+                    <div class="mission-info">
+                        <h3>Tiangong Space Station</h3>
+                        <p>China's space station module that hosts astronauts in low Earth orbit for scientific research.</p>
+                        <div class="mission-meta">
+                            <span>CNSA</span>
+                            <span>April 29, 2021</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ExoMars -->
+                <div class="mission-card">
+                    <img src="C:\Users\ANUPAMA\OneDrive\Desktop\space\ExoMars.jpg" alt="ExoMars" class="mission-img">
+                    <div class="mission-info">
+                        <h3>ExoMars</h3>
+                        <p>European-Russian mission to search for evidence of life on Mars and study the Martian environment.</p>
+                        <div class="mission-meta">
+                            <span>ESA/Roscosmos</span>
+                            <span>March 14, 2016</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Aditya-L1 -->
+            <div class="mission-card">
+                <img src="C:\Users\ANUPAMA\OneDrive\Desktop\space\Aditya-L1.jpg" alt="Aditya-L1" class="mission-img">
+                <div class="mission-info">
+                    <h3>Aditya-L1</h3>
+                    <p>India's first mission to study the Sun. Positioned at the Lagrangian point L1, it observes solar activity and its effect on space weather.</p>
+                    <div class="mission-meta">
+                        <span>ISRO</span>
+                        <span>September 2, 2023</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- James Webb Space Telescope -->
+            <div class="mission-card">
+                <img src="C:\Users\ANUPAMA\OneDrive\Desktop\space\James Webb Space Telescope.jpg" alt="James Webb Space Telescope" class="mission-img">
+                <div class="mission-info">
+                    <h3>James Webb Space Telescope</h3>
+                    <p>The largest, most powerful space telescope ever built, designed to observe the most distant objects in the universe.</p>
+                    <div class="mission-meta">
+                        <span>NASA/ESA/CSA</span>
+                        <span>December 25, 2021</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Mangalyaan (MOM) -->
+            <div class="mission-card">
+                <img src="C:\Users\ANUPAMA\OneDrive\Desktop\space\Mangalyaan (MOM).avif" alt="Mangalyaan" class="mission-img">
+                <div class="mission-info">
+                    <h3>Mangalyaan (MOM)</h3>
+                    <p>India's first interplanetary mission and the first Asian mission to reach Mars orbit. Remarkable for its cost-effectiveness and first-attempt success.</p>
+                    <div class="mission-meta">
+                        <span>ISRO</span>
+                        <span>September 24, 2014</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Artemis Program -->
+            <div class="mission-card">
+                <img src="C:\Users\ANUPAMA\OneDrive\Desktop\space\Artemis Program.jpg" alt="Artemis Program" class="mission-img">
+                <div class="mission-info">
+                    <h3>Artemis Program</h3>
+                    <p>NASA's program to return humans to the Moon by the mid-2020s and establish sustainable lunar exploration by the end of the decade.</p>
+                    <div class="mission-meta">
+                        <span>NASA & Partners</span>
+                        <span>2020-Present</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Gaganyaan -->
+            <div class="mission-card">
+                <img src="C:\Users\ANUPAMA\OneDrive\Desktop\space\Gaganyaann.jpg" alt="Gaganyaan" class="mission-img">
+                <div class="mission-info">
+                    <h3>Gaganyaan</h3>
+                    <p>India's first human spaceflight program, aiming to send astronauts to low Earth orbit on an Indian launch vehicle developed by ISRO.</p>
+                    <div class="mission-meta">
+                        <span>ISRO</span>
+                        <span>In Development</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Hayabusa2 -->
+            <div class="mission-card">
+                <img src="C:\Users\ANUPAMA\OneDrive\Desktop\space\Hayabusa2.jpg" alt="Hayabusa2" class="mission-img">
+                <div class="mission-info">
+                    <h3>Hayabusa2</h3>
+                    <p>Japanese mission that returned samples from asteroid Ryugu, providing insights into the early solar system and potential origin of life.</p>
+                    <div class="mission-meta">
+                        <span>JAXA</span>
+                        <span>December 6, 2020</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+        </section>
+
+        <section id="facts">
+            <h2 class="section-title">Space Facts</h2>
+            <div class="facts-container">
+                <div class="fact-item active">
+                    <h3>The Sun accounts for 99.86% of the mass in our solar system</h3>
+                    <p>The Sun is so massive that it could fit roughly 1.3 million Earths inside it. Its immense gravity holds the entire solar system together.</p>
+                </div>
+                <div class="fact-item">
+                    <h3>There are more stars in the universe than grains of sand on Earth</h3>
+                    <p>Astronomers estimate there are about 100 billion stars in our Milky Way alone, and at least 100 billion galaxies in the observable universe.</p>
+                </div>
+                <div class="fact-item">
+                    <h3>A day on Venus is longer than its year</h3>
+                    <p>Venus rotates so slowly that it takes 243 Earth days to complete one rotation. However, it orbits the Sun in just 225 Earth days, making its day longer than its year.</p>
+                </div>
+                <div class="fact-item">
+                    <h3>Black holes aren't actually holes</h3>
+                    <p>They're extremely dense regions where gravity is so strong that nothing, not even light, can escape. The term "black hole" was coined by physicist John Wheeler in 1967.</p>
+                </div>
+                <div class="fact-item">
+                    <h3>Jupiter's Great Red Spot is shrinking</h3>
+                    <p>This massive storm has been raging for at least 400 years, but recent observations show it's getting smaller. It's still large enough to fit about three Earths inside it.</p>
+                </div>
+                <div class="fact-item">
+                    <h3>India's Chandrayaan-1 discovered water on the Moon</h3>
+                    <p>In 2009, India's first lunar mission detected water molecules on the lunar surface, changing our understanding of the Moon. This discovery has significant implications for future lunar exploration and potential colonization.</p>
+                </div>
+                <div class="fact-item">
+                    <h3>The Apollo 11 computer had less processing power than a modern calculator</h3>
+                    <p>The guidance computer used for the Apollo 11 mission operated at 1.024 MHz and had about 64 kilobytes of memory, less powerful than many modern calculators or digital watches.</p>
+                </div>
+                <div class="fact-nav">
+                    <button class="fact-btn" id="prev-fact" disabled>&larr;</button>
+                    <span id="fact-counter">1/5</span>
+                    <button class="fact-btn" id="next-fact">&rarr;</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="people">
+            <h2 class="section-title">Space Pioneers</h2>
+            <div class="people-slider">
+                <!-- Neil Armstrong -->
+                <div class="person-card active">
+                    <img src="C:\Users\ANUPAMA\OneDrive\Desktop\space\Neil Armstrong.jpg" alt="Neil Armstrong" class="person-img">
+                    <div class="person-info">
+                        <h3>Neil Armstrong</h3>
+                        <p>American astronaut and the first person to walk on the Moon during the Apollo 11 mission in 1969. His famous words, "That's one small step for man, one giant leap for mankind," became one of the most iconic quotes in history.</p>
+                    </div>
+                </div>
+                
+                <!-- Valentina Tereshkova -->
+                <div class="person-card">
+                    <img src="C:\Users\ANUPAMA\OneDrive\Desktop\space\Valentina Tereshkova.jpg" alt="Valentina Tereshkova" class="person-img">
+                    <div class="person-info">
+                        <h3>Valentina Tereshkova</h3>
+                        <p>Soviet cosmonaut who became the first woman in space in 1963. She orbited the Earth 48 times aboard Vostok 6, spending almost three days in space and remains the only woman to have been on a solo space mission.</p>
+                    </div>
+                </div>
+                
+                <!-- Kalpana Chawla -->
+                <div class="person-card">
+                    <img src="C:\Users\ANUPAMA\OneDrive\Desktop\space\Kalpana Chawla.jpg" alt="Kalpana Chawla" class="person-img">
+                    <div class="person-info">
+                        <h3>Kalpana Chawla</h3>
+                        <p>The first woman of Indian origin to go to space. She first flew on Space Shuttle Columbia in 1997 and tragically died during her second mission when Columbia disintegrated upon reentry in 2003.</p>
+                    </div>
+                </div>
+                
+                <!-- Wernher von Braun -->
+                <div class="person-card">
+                    <img src="C:\Users\ANUPAMA\OneDrive\Desktop\space\Wernher von Braun.jpg" alt="Wernher von Braun" class="person-img">
+                    <div class="person-info">
+                        <h3>Wernher von Braun</h3>
+                        <p>German-American aerospace engineer who was a leading figure in the development of rocket technology. He was the chief architect of NASA's Saturn V launch vehicle that propelled the Apollo spacecraft to the Moon.</p>
+                    </div>
+                </div>
+                
+                <!-- Yuri Gagarin -->
+                <div class="person-card">
+                    <img src="C:\Users\ANUPAMA\OneDrive\Desktop\space\Yuri Gagarin.jpg" alt="Yuri Gagarin" class="person-img">
+                    <div class="person-info">
+                        <h3>Yuri Gagarin</h3>
+                        <p>Soviet pilot and cosmonaut who became the first human to journey into outer space. His Vostok spacecraft completed one orbit of Earth on April 12, 1961, marking a milestone in the Space Race.</p>
+                    </div>
+                </div>
+                
+                <div class="slider-nav">
+                    <span class="slider-dot active" data-index="0"></span>
+                    <span class="slider-dot" data-index="1"></span>
+                    <span class="slider-dot" data-index="2"></span>
+                    <span class="slider-dot" data-index="3"></span>
+                    <span class="slider-dot" data-index="4"></span>
+                </div>
+            </div>
+        </section>
+
+        <section id="search" class="search-section">
+            <h2 class="section-title">Explore More</h2>
+            <div class="search-bar"><div class="search-results"></div>
+                <input type="text" class="search-input" placeholder="Search missions, facts, or people...">
+                <button class="search-btn">Search</button>
+            </div>
+        </section><script>
+            // Space Facts Slider
+            const facts = document.querySelectorAll('.fact-item');
+            const factCounter = document.getElementById('fact-counter');
+            const prevFactBtn = document.getElementById('prev-fact');
+            const nextFactBtn = document.getElementById('next-fact');
+            let currentFactIndex = 0;
+    
+            function showFact(index) {
+                facts.forEach(fact => fact.classList.remove('active'));
+                facts[index].classList.add('active');
+                factCounter.textContent = `${index + 1}/${facts.length}`;
+                
+                prevFactBtn.disabled = index === 0;
+                nextFactBtn.disabled = index === facts.length - 1;
+            }
+    
+            prevFactBtn.addEventListener('click', () => {
+                if (currentFactIndex > 0) {
+                    currentFactIndex--;
+                    showFact(currentFactIndex);
+                }
+            });
+    
+            nextFactBtn.addEventListener('click', () => {
+                if (currentFactIndex < facts.length - 1) {
+                    currentFactIndex++;
+                    showFact(currentFactIndex);
+                }
+            });
+    
+            // People Slider
+            const personCards = document.querySelectorAll('.person-card');
+            const sliderDots = document.querySelectorAll('.slider-dot');
+    
+            sliderDots.forEach(dot => {
+                dot.addEventListener('click', () => {
+                    const index = parseInt(dot.getAttribute('data-index'));
+                    showPerson(index);
+                });
+            });
+    
+            function showPerson(index) {
+                personCards.forEach(card => card.classList.remove('active'));
+                sliderDots.forEach(dot => dot.classList.remove('active'));
+                
+                personCards[index].classList.add('active');
+                sliderDots[index].classList.add('active');
+            }
+    
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        window.scrollTo({
+                            top: target.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+            document.addEventListener("DOMContentLoaded", () => { const searchInput = document.querySelector(".search-input"); const searchButton = document.querySelector(".search-btn"); const searchResults = document.querySelector(".search-results");
+
+searchButton.addEventListener("click", () => {
+    performSearch();
+});
+
+searchInput.addEventListener("keypress", (event) => {
+    if (event.key === "Enter") {
+        performSearch();
+    }
+});
+
+function performSearch() {
+    const query = searchInput.value.toLowerCase();
+    if (query.trim() === "") {
+        searchResults.classList.remove("active");
+        searchResults.innerHTML = "";
+        return;
+    }
+
+    const allTextElements = document.body.querySelectorAll("p, h1, h2, h3, h4, h5, h6, li, span, a");
+    let resultsHTML = "";
+    
+    allTextElements.forEach(element => {
+        if (element.textContent.toLowerCase().includes(query)) {
+            resultsHTML += `
+                <div class="result-item">
+                    <div class="result-title">${element.textContent}</div>
+                    <div class="result-snippet">...${highlightMatch(element.textContent, query)}...</div>
+                </div>
+            `;
+        }
+    });
+
+    if (resultsHTML === "") {
+        searchResults.innerHTML = "<p>No results found.</p>";
+    } else {
+        searchResults.innerHTML = resultsHTML;
+    }
+    
+    searchResults.classList.add("active");
+}
+
+function highlightMatch(text, query) {
+    const regex = new RegExp(`(${query})`, "gi");
+    return text.replace(regex, "<mark>$1</mark>");
+}
+
+});
+            
+    </script>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <ul class="social-links">
+                    <li><a href="https://x.com/NASA?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor">Twitter</a></li>
+                    <li><a href="https://www.facebook.com/NASA/">Facebook</a></li>
+                    <li><a href="https://www.instagram.com/nasa/?hl=en">Instagram</a></li>
+                    <li><a href="https://www.youtube.com/NASA">YouTube</a></li>
+                </ul>
+                <p class="copyright">&copy; 2025 SpaceVoyager. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    
+   
+
+    
+    </script><script src="script.js"></script>
+</body>
+</html>
